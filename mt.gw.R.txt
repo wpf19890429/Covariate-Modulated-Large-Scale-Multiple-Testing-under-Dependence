@@ -1,0 +1,35 @@
+mt.gw<-function(pv, q, p0)
+{
+  ### ARGUMENTS
+    # pv is the set of the two-sided p-values
+    # q is the desired FDR level
+    # p0 is the estimated proportion of nulls
+  ### VALUSE, the output is a list with
+    # nr: the number of hypotheses to be rejected
+    # th: the p-value threshold
+    # re: the indices of rejected hypotheses
+    # ac: the indices of accepted hypotheses
+    # de: the binary decision rule
+  m=length(pv)
+  m0=m*p0
+  st.pv<-sort(pv)   
+  pvi<-st.pv/1:m
+  hps<-rep(0, m)
+  if (max(pvi<=(q/m0))==0)
+  {
+    k<-0
+    pk<-1
+    reject<-NULL
+    accept<-1:m
+  }
+  else
+  {
+    k<-max(which(pvi<=(q/m0)))
+    pk<-st.pv[k]
+    reject<-which(pv<=pk)
+    accept<-which(pv>pk)
+    hps[reject]<-1
+  }
+  y<-list(nr=k, th=pk, re=reject, ac=accept, de=hps)
+  return (y)
+}

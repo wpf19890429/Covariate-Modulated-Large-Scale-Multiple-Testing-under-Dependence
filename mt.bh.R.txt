@@ -1,0 +1,34 @@
+mt.bh<-function(pv, q)
+{ 
+  # the input 
+    # pv: the p-values
+    # q: the FDR level
+  # the output 
+    # nr: the number of hypothesis to be rejected
+    # th: the p-value threshold
+    # re: the index of rejected hypotheses
+    # ac: the index of accepted hypotheses
+    # de: the decision rule
+
+  m=length(pv)
+  st.pv<-sort(pv)   
+  pvi<-st.pv/1:m
+  hps<-rep(0, m)
+  if (max(pvi<=(q/m))==0)
+  {
+    k<-0
+    pk<-1
+    reject<-NULL
+    accept<-1:m
+  }
+  else
+  {
+    k<-max(which(pvi<=(q/m)))
+    pk<-st.pv[k]
+    reject<-which(pv<=pk)
+    accept<-which(pv>pk)
+    hps[reject]<-1
+  }
+  y<-list(nr=k, th=pk, re=reject, ac=accept, de=hps)
+  return (y)
+}
